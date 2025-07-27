@@ -1,20 +1,28 @@
 import axios, {
     AxiosInstance,
     AxiosResponse,
-    InternalAxiosRequestConfig  
+    InternalAxiosRequestConfig
 } from 'axios'
-import { stat } from 'fs'
 
-const api:AxiosInstance = axios.create({
-    baseURL : 'http://localhost:3000/api-docs/api/',
+
+class ApiError extends Error{
+    status:number
+    constructor(message:string, status:number ,){
+        super(message)
+        this.status = status
+    }
+}
+
+const api: AxiosInstance = axios.create({
+    baseURL: 'http://localhost:3000/api/',
     headers: {
-        'Content-Type': 'application-json'
+        'Content-Type': 'application/json'
     }
 })
 
-api.interceptors.request.use((config:InternalAxiosRequestConfig) => {
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('token')
-    if (token){
+    if (token) {
         config.headers.set(`Authorization`, `Bearer ${token}`)
     }
     return config
@@ -22,27 +30,52 @@ api.interceptors.request.use((config:InternalAxiosRequestConfig) => {
 
 
 
-api.interceptors.response.use((response:AxiosResponse)=>{
+api.interceptors.response.use((response: AxiosResponse) => {
     // Se não tiver erro na requisição, ele retorna o valor normal
     return response
 },
-    async(error) => {
+    async (error) => {
+        const originalResquest = error.config
 
-        const { status } = error.response
+        if (error.response) {
+            const { status } = error.response
 
-        if (status >= 400){
-            console.log(error)
-            return Promise.reject(
-                new Error(
-                    JSON.stringify({
-                        status,
-                        message: error.response.data?.message || 'Erro desconhecido',
-                    })
+            if (status === 401 && originalResquest.header.Authorization) {
+                const refresjToken = await api.post<{ token: string }>(
+                    '/refresh-token',
+                    {
+                        token: localStorage.getItem('refreshToken'),
+                    }
                 )
-            )
+                const newToken = refresjToken.data.token
+                localStorage.setItem('token', newToken)
+                originalResquest.header.Authorization = `Bearer ${newToken}`
+                return api(originalResquest)
+            }
+            
+            if (status === 403){
+                alert("Você não tem acesso a essa tela")
+                window.history.back();
+                const erroAcessoNegado = new ApiError("Acesso Negado", status )
+                return Promise.reject(erroAcessoNegado)
+            }
 
+
+            if (status >= 400) {
+                console.log(originalResquest)
+                console.log(error)
+                return Promise.reject(
+                    new Error(
+                        JSON.stringify({
+                            status,
+                            message: error.response.data?.message || 'Erro desconhecido',
+                        })
+                    )
+                )
+
+            }
         }
-    } 
+    }
 
 )
 
