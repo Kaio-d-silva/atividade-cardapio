@@ -6,13 +6,14 @@ interface CardPratoProps {
   cozinha: string;
   descricaoCurta: string;
   imagem: string;
+  usuario: any
 }
 
 const CardPrato: FC<CardPratoProps> = (props) => {
   return (
     <>
       <div className="prato-card">
-        <div className="menu-container">
+        {props.usuario?.role === 'Gerente' && (<div className="menu-container">
           <button className="menu-button" onClick={() => {}}>
             &#x22EE;
           </button>
@@ -27,7 +28,7 @@ const CardPrato: FC<CardPratoProps> = (props) => {
               Ver Detalhes
             </a>
           </div>
-        </div>
+        </div>)}
         <img
           src={props.imagem}
           alt="Feijoada brasileira"

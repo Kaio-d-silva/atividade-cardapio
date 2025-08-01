@@ -4,7 +4,7 @@ import "../estilos/index.css";
 import Input from "./Input";
 import Container from "./Container";
 import Button from "./Button";
-import api from "../http/api";
+import api from "../http/apiProfessor";
 import { useNavigate } from "react-router-dom";
 import Snackbar, { SnackbarState } from "./Snackbar";
 
@@ -23,12 +23,14 @@ export default function Login() {
   const navigate = useNavigate();
 
   const login = async () => {
-    const duration = 10000;
+    const duration = 1000;
 
     if (!validate) {
       return;
     }
     try {
+      console.log(values.email, values.senha)
+
       const response = await api.post<{
         token: string;
         refreshToken: string;
@@ -37,6 +39,7 @@ export default function Login() {
         email: values.email,
         senha: values.senha,
       });
+
 
       const { token, refreshToken, message } = response.data;
 
