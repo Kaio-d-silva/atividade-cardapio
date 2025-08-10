@@ -1,34 +1,62 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import "../estilos/DetalhesPrato.css"; // Importando o CSS específico para o componente
+import { useNavigate, useParams } from "react-router-dom";
+import api from "../http/api";
+
+
+interface DetalhesPratoProps {  
+  nome: string;
+  cozinha: string;
+  descricao_resumida: string;
+  descricao_detalhada: string;
+  imagem: string;
+  valor: number;
+}
 
 function DetalhesPrato() {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>(); 
+  const [prato, setPrato] = useState<DetalhesPratoProps>({
+    nome: "",
+    cozinha: "",
+    descricao_resumida: "",
+    descricao_detalhada: "",
+    imagem: "",
+    valor: 0
+  });
+
+  useEffect(() => {
+    const fetchPratoDetails = async () => {
+      const prato = await api.get(`/pratos/${id}`);
+      setPrato(prato.data);
+    }
+    fetchPratoDetails();
+  }, [id]);
+
+
   return (
     <>
       <div className="detalhes-prato">
         <div className="detalhes-prato-card">
           <div className="detalhes-prato-card-header">
             <img
-              src="https://media.istockphoto.com/id/899497396/pt/foto/delicious-brazilian-feijoada.jpg?s=2048x2048&w=is&k=20&c=OO_JGRT2AgsybJxSFB-mFP2vsOn7QtsbqEd1sZiUzuw="
-              alt="imagem de feijoada"
+              src={prato.imagem}
+              alt="imagem prato"
             />
             <div className="detalhes-prato-card-header-texto">
-              <h1>Feijoada</h1>
+              <h1>{prato.nome}</h1>
               <p>
-                <strong>Cozinha:</strong>Brasileira
+                <strong>Cozinha:</strong>{ prato.cozinha }
               </p>
               <p>
-                <strong>Valor:</strong> R$28,00
+                <strong>Valor:</strong> R${prato.valor}
               </p>
             </div>
           </div>
           <p>
-            <strong>Descrição da sua experiência Gastronômica:</strong> Sinta o
-            sabor inigualável de nossa feijoada, preparada com ingredientes
-            selecionados e tempero único que te leva à sensação de estar
-            desfrutando dessa experiência gastronômica em uma fazenda lá no
-            interior.
+            <strong>Descrição da sua experiência Gastronômica:</strong> {prato.descricao_detalhada}
           </p>
-          <button onClick={() => {}}>Voltar</button>
+          <button onClick={() => {navigate('/')}}>Voltar</button>
         </div>
       </div>
     </>

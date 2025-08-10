@@ -1,27 +1,46 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "../estilos/Home.css";
 import terraDasAguas from "../assets/terra_das_aguas.jpg";
 import CardPrato from "./CardPrato";
 import CardNovoPrato from "./CardNovoPrato";
 import { AuthContext } from "../context/authContext";
+import api from "../http/api";
+
+interface Prato {
+  id : number
+  nome : string
+  cozinha : string
+  descricao_resumida : string
+  descricao_detalhada : string
+  imagem : string
+  valor : number
+} 
+
 
 function Home() {
 
-  const [prato, setPrato] = React.useState({
-    nome: "Feijoada",
-    cozinha: "Brasileira",
-    descricaoCurta: "Feijoada completa, com pedaços suculentos de carne suína e aquele sabor brasileiro incomparável.",
-    imagem: "https://media.istockphoto.com/id/899497396/pt/foto/delicious-brazilian-feijoada.jpg?s=2048x2048&w=is&k=20&c=OO_JGRT2AgsybJxSFB-mFP2vsOn7QtsbqEd1sZiUzuw="
-  });
+  const [pratos, setPrato] = React.useState([{
+    id: 0,
+    nome: "",
+    cozinha: "",
+    descricao_resumida: "",
+    descricao_detalhada: "",
+    imagem: "",
+    valor: 0,
+  }]);
 
-  // const userRole = getRole() 
+  useEffect(() => {
+    const fetchPrato = async () => {
+      try {
+        const response = await api.get("/pratos");
+        setPrato(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar prato:", error);
+      }
+    };
 
-  // const getRole = () =>{
-  //   const token = localStorage.getItem("token")
-  //   const tokenBearerDecoded = atob(token.split(".")[1])
-
-  //   // return tokenBearerDecoded.role
-  // }  
+    fetchPrato();
+  }, [pratos]);
 
   const authContext = useContext(AuthContext)
 
@@ -39,10 +58,21 @@ function Home() {
       <h1>Bem vindo ao Restaurante Terra das Aguas SENAC - MS</h1>
       <div className="lista-pratos">
         <CardNovoPrato />
-        <CardPrato nome={prato.nome} cozinha={prato.cozinha} descricaoCurta={prato.descricaoCurta} imagem={prato.imagem} usuario={usuario}/>
-        <CardPrato nome={prato.nome} cozinha={prato.cozinha} descricaoCurta={prato.descricaoCurta} imagem={prato.imagem} usuario={usuario}/>
-        <CardPrato nome={prato.nome} cozinha={prato.cozinha} descricaoCurta={prato.descricaoCurta} imagem={prato.imagem} usuario={usuario}/>
-        <CardPrato nome={prato.nome} cozinha={prato.cozinha} descricaoCurta={prato.descricaoCurta} imagem={prato.imagem} usuario={usuario}/>
+        {pratos && 
+          pratos
+          .filter((item: Prato) => item.id !== 0) 
+          .map((item: Prato) => (
+
+          <CardPrato 
+            key={item.id}
+            id={item.id}
+            nome={item.nome} 
+            cozinha={item.cozinha} 
+            descricao_resumida={item.descricao_resumida} 
+            imagem={item.imagem} 
+            usuario={usuario}
+          />
+        ))} 
       </div>
     </div>
   );

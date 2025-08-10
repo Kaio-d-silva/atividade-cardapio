@@ -1,15 +1,31 @@
 import React, { FC } from "react";
 import "../estilos/CardPrato.css";
+import { useNavigate } from "react-router-dom";
+import api from "../http/api";
 
 interface CardPratoProps {
-  nome: string;
-  cozinha: string;
-  descricaoCurta: string;
-  imagem: string;
+  id : number
+  nome : string
+  cozinha : string
+  descricao_resumida : string
+  imagem : string
   usuario: any
 }
 
 const CardPrato: FC<CardPratoProps> = (props) => {
+  const navigate = useNavigate()
+
+  const deletePrato = async (id: number) => {
+    try {
+      console.log("Excluindo prato com ID:", id);
+      await api.delete(`/pratos/${id}`);
+      console.log("Prato excluído com sucesso");
+      // Aqui você pode atualizar o estado ou fazer outra ação após a exclusão
+    } catch (error) {
+      console.error("Erro ao excluir prato:", error);
+    }
+  };
+
   return (
     <>
       <div className="prato-card">
@@ -18,15 +34,23 @@ const CardPrato: FC<CardPratoProps> = (props) => {
             &#x22EE;
           </button>
           <div className="dropdown-menu">
-            <a href="#" className="dropdown-item">
+            <button
+            className="dropdown-item"
+            onClick={() => navigate(`/editar-prato/${props.id}`)}>
               Editar
-            </a>
-            <a href="#" className="dropdown-item">
-              Deletar
-            </a>
-            <a href="#" className="dropdown-item">
+            </button>
+            
+            <button 
+            className="dropdown-item"
+            onClick={() => {deletePrato(props.id)}}>
+              Excluir
+            </button>
+            <button
+            className="dropdown-item"
+            onClick={() => navigate(`/detalhes-prato/${props.id}`)}
+            >
               Ver Detalhes
-            </a>
+            </button>
           </div>
         </div>)}
         <img
@@ -35,7 +59,7 @@ const CardPrato: FC<CardPratoProps> = (props) => {
         />
         <h2 className="nome-prato">{props.nome}</h2>
         <p className="cozinha-prato">{props.cozinha}</p>
-        <p className="descricao-curta-prato">{props.descricaoCurta}</p>
+        <p className="descricao-curta-prato">{props.descricao_resumida}</p>
         <a href="#" className="btn">
           Ver Detalhes
         </a>

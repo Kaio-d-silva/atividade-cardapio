@@ -1,52 +1,109 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../estilos/FormularioPrato.css"; // Importando o CSS específico para o componente
 import api from "../http/api";
 import Input from "./Input";
 import useForm from "../hooks/userForm";
+import { useParams } from "react-router-dom";
+import Snackbar, { SnackbarState } from "./Snackbar";
 
 interface FormularioPratoProps {
-  isEditing?: boolean; 
+  isEditing?: boolean;
 }
 
-const FormularioPrato: React.FC = (props: FormularioPratoProps) => {
- 
- 
-  const { values, errors, handleChange } = useForm({
+const FormularioPrato = ({ isEditing = false }: FormularioPratoProps) => {
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    message: "",
+    type: "success",
+    duration: 0,
+  })
+  const { values, errors, handleChange, setData } = useForm({
     nome: "",
     cozinha: "",
-    descricaoResumida: "",
-    descricaoDetalhada: "",
+    descricao_resumida: "",
+    descricao_detalhada: "",
     imagem: "",
     valor: 0
   });
 
 
-  const [prato, setPrato] = React.useState({
-    nome: "",
-    cozinha: "",
-    descricaoResumida: "",
-    descricaoDetalhada: "",
-    imagem: "",
-    valor: 0
-  });
-  
-  
   const criarPrato = async () => {
     try {
       console.log("Criando prato:", values);
       const response = await api.post("/pratos", {
         nome: values.nome,
         cozinha: values.cozinha,
-        descricao_resumida: values.descricaoResumida,
-        descricao_detalhada: values.descricaoDetalhada,
+        descricao_resumida: values.descricao_resumida,
+        descricao_detalhada: values.descricao_detalhada,
         imagem: values.imagem,
         valor: values.valor
       })
-      console.log("Prato criado com sucesso:", response.data);
+      setSnackbar({
+        message: "Prato criado com sucesso!",
+        type: "success",
+        duration: 3000,
+      });
     } catch (error) {
-      console.error("Erro ao criar prato:", error);  
-    }}
-    
+      setSnackbar({
+        message: "Erro ao criar prato. Tente novamente.",
+        type: "error",
+        duration: 3000,
+      });
+    }
+  }
+
+  const { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    if (!isEditing || !id) return;
+    const fetchPrato = async () => {
+      try {
+        const response = await api.get(`/pratos/${id}`)
+        const pratoEditado = {
+          id: response.data.id,
+          nome: response.data.nome,
+          cozinha: response.data.cozinha,
+          descricao_resumida: response.data.descricao_resumida,
+          descricao_detalhada: response.data.descricao_detalhada,
+          imagem: response.data.imagem,
+          valor: response.data.valor
+        }
+        setData(pratoEditado);
+
+
+      } catch (error) {
+        console.error("Erro ao buscar prato:", error);
+      }
+
+    }
+    fetchPrato()
+  }, [isEditing, id]);
+
+  const editarPrato = async () => {
+    try {
+      const response = await api.put(`/pratos/${id}`, {
+        nome: values.nome,
+        cozinha: values.cozinha,
+        descricao_resumida: values.descricao_resumida,
+        descricao_detalhada: values.descricao_detalhada,
+        imagem: values.imagem,
+        valor: values.valor
+      })
+      console.log("Prato editado com sucesso:", response.data);
+      setSnackbar({
+        message: "Prato editado com sucesso!",
+        type: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Erro ao editar prato:", error);
+      setSnackbar({
+        message: "Erro ao editar prato.",
+        type: "error",
+        duration: 3000,
+      });
+    }
+  }
+
 
   return (
     <>
@@ -71,16 +128,16 @@ const FormularioPrato: React.FC = (props: FormularioPratoProps) => {
         <Input
           placeholder="Digite a descrição resumida do prato"
           errorMessage={errors.descricaoResumida}
-          value={values.descricaoResumida}
+          value={values.descricao_resumida}
           type="text"
-          onChange={handleChange("descricaoResumida")}
+          onChange={handleChange("descricao_resumida")}
         />
         <Input
           placeholder="Digite a descrição detalhada do prato"
-          errorMessage={errors.descricaoDetalhada}
-          value={values.descricaoDetalhada}
+          errorMessage={errors.descricao_detalhada}
+          value={values.descricao_detalhada}
           type="text"
-          onChange={handleChange("descricaoDetalhada")}
+          onChange={handleChange("descricao_detalhada")}
         />
         <Input
           placeholder="Digite a URL da imagem do prato"
@@ -96,11 +153,23 @@ const FormularioPrato: React.FC = (props: FormularioPratoProps) => {
           type="number"
           onChange={handleChange("valor")}
         />
-        <button 
-        type="submit"
-        onClick={() => {criarPrato()}}
-        >
-          Cadastrar Prato</button>
+        {!isEditing && (<button
+          type="submit"
+          onClick={() => { criarPrato() }}>
+          Cadastrar Prato</button>)}
+        {isEditing && (
+          <button
+            type="submit"
+            onClick={() => { editarPrato() }}>
+            Editar Prato</button>)}
+        <Snackbar
+          message={snackbar.message}
+          type={snackbar.type}
+          duration={snackbar.duration}
+          onClose={() =>
+            setSnackbar({ message: '', type: 'success', duration: 0 })
+          }
+        />
       </div>
     </>
   );
