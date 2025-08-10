@@ -8,6 +8,11 @@ const useForm = <T extends Record<string, unknown>>(initialValues: T) => {
     (field: keyof T) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [field]: e.target.value });
     };
+  
+  const setData = 
+    (data: T) => {
+      setValues(data);
+    }
 
   const validate = (
     validators: Record<keyof T, (value: unknown) => string | null>,
@@ -21,7 +26,7 @@ const useForm = <T extends Record<string, unknown>>(initialValues: T) => {
     return Object.keys(newErrors).length === 0; // Retorna true se não houver erros
   };
 
-  return { values, errors, handleChange, validate };
+  return { values, errors, handleChange, validate, setData };
 };
 
 export default useForm;
