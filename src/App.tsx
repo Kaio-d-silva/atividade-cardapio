@@ -14,6 +14,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/detalhes-prato/:id" element={<DetalhesPrato />} />
         <Route path="/cadastro-prato" element={<FormularioPrato />} />
+        <Route path="/editar-prato/:id" element={<FormularioPrato isEditing= {true} />} />
       </Routes>
     </Router>
   );
