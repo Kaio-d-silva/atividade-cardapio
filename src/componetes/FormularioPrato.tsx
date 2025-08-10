@@ -1,35 +1,106 @@
 import React from "react";
 import "../estilos/FormularioPrato.css"; // Importando o CSS específico para o componente
+import api from "../http/api";
+import Input from "./Input";
+import useForm from "../hooks/userForm";
 
-const FormularioPrato: React.FC = () => {
+interface FormularioPratoProps {
+  isEditing?: boolean; 
+}
+
+const FormularioPrato: React.FC = (props: FormularioPratoProps) => {
+ 
+ 
+  const { values, errors, handleChange } = useForm({
+    nome: "",
+    cozinha: "",
+    descricaoResumida: "",
+    descricaoDetalhada: "",
+    imagem: "",
+    valor: 0
+  });
+
+
+  const [prato, setPrato] = React.useState({
+    nome: "",
+    cozinha: "",
+    descricaoResumida: "",
+    descricaoDetalhada: "",
+    imagem: "",
+    valor: 0
+  });
+  
+  
+  const criarPrato = async () => {
+    try {
+      console.log("Criando prato:", values);
+      const response = await api.post("/pratos", {
+        nome: values.nome,
+        cozinha: values.cozinha,
+        descricao_resumida: values.descricaoResumida,
+        descricao_detalhada: values.descricaoDetalhada,
+        imagem: values.imagem,
+        valor: values.valor
+      })
+      console.log("Prato criado com sucesso:", response.data);
+    } catch (error) {
+      console.error("Erro ao criar prato:", error);  
+    }}
+    
+
   return (
     <>
       <div className="form-container">
         <h1>Cadastro de Pratos</h1>
         <p>Bem-vindo ao sistema de cadastro de pratos!</p>
-        <input type="text" name="nome" placeholder="Digite o nome do prato" />
-        <input
+        <Input
+          placeholder="Digite o nome do prato"
+          errorMessage={errors.nome}
+          value={values.nome}
           type="text"
-          name="cozinha"
+          onChange={handleChange("nome")}
+        />
+        <Input
           placeholder="Digite o tipo de cozinha do prato"
-        />
-        <input
+          errorMessage={errors.cozinha}
+          value={values.cozinha}
           type="text"
-          name="descricao-resumida"
+          onChange={handleChange("cozinha")}
+
+        />
+        <Input
           placeholder="Digite a descrição resumida do prato"
-        />
-        <input
+          errorMessage={errors.descricaoResumida}
+          value={values.descricaoResumida}
           type="text"
-          name="descricao-detalhada"
+          onChange={handleChange("descricaoResumida")}
+        />
+        <Input
           placeholder="Digite a descrição detalhada do prato"
-        />
-        <input
+          errorMessage={errors.descricaoDetalhada}
+          value={values.descricaoDetalhada}
           type="text"
-          name="imagem"
-          placeholder="Digite a url da imagem do prato"
+          onChange={handleChange("descricaoDetalhada")}
         />
-        <input type="text" name="valor" placeholder="Digite o valor do prato" />
-        <button type="submit">Cadastrar Prato</button>
+        <Input
+          placeholder="Digite a URL da imagem do prato"
+          errorMessage={errors.imagem}
+          value={values.imagem}
+          type="text"
+          onChange={handleChange("imagem")}
+        />
+        <Input
+          placeholder="Digite o valor do prato"
+          errorMessage={errors.valor}
+          value={values.valor.toString()}
+          type="number"
+          onChange={handleChange("valor")}
+        />
+        <button 
+        type="submit"
+        onClick={() => {criarPrato()}}
+        >
+          Cadastrar Prato</button>
       </div>
     </>
   );
