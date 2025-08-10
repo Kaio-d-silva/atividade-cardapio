@@ -4,7 +4,7 @@ import "../estilos/index.css";
 import Input from "./Input";
 import Container from "./Container";
 import Button from "./Button";
-import api from "../http/apiProfessor";
+import api from "../http/api";
 import { useNavigate } from "react-router-dom";
 import Snackbar, { SnackbarState } from "./Snackbar";
 
@@ -29,7 +29,6 @@ export default function Login() {
       return;
     }
     try {
-      console.log(values.email, values.senha)
 
       const response = await api.post<{
         token: string;
