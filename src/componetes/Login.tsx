@@ -1,68 +1,102 @@
-import { useState } from "react";
-import "../estilos/login.css";
-// import api from "../http/api";
+import React, { useState } from "react";
+import useForm from "../hooks/userForm";
+import "../estilos/index.css";
+import Input from "./Input";
+import Container from "./Container";
+import Button from "./Button";
+import api from "../http/api";
 import { useNavigate } from "react-router-dom";
+import Snackbar, { SnackbarState } from "./Snackbar";
 
-const Login = () => {
+export default function Login() {
+  const { values, errors, handleChange, validate } = useForm({
+    email: "",
+    senha: "",
+  });
 
-  const navigate = useNavigate()
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    message: "",
+    type: "success",
+    duration: 0,
+  });
 
-  // const logar = async () => {
-  //   try {
-  //     const res = await api.post("/login", {
-  //       email: email,
-  //       senha: senha,
-  //     });
+  const navigate = useNavigate();
 
-  //     const { token, refreshToken } = res.data;
+  const login = async () => {
+    const duration = 1000;
 
-  //     localStorage.setItem("token", token);
-  //     localStorage.setItem("refreshToken", refreshToken);
-      
-  //     navigate('/')
+    if (!validate) {
+      return;
+    }
+    try {
 
-  //   } catch (error: unknown) {
-  //     console.log("deu erro")
-  //   }
-  // };
+      const response = await api.post<{
+        token: string;
+        refreshToken: string;
+        message: string;
+      }>('/login', {
+        email: values.email,
+        senha: values.senha,
+      });
 
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+
+      const { token, refreshToken, message } = response.data;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+      setSnackbar({
+        message: message || 'Sucesso ao logar.',
+        type: 'success',
+        duration,
+      });
+      setTimeout(() => {
+        navigate('/');
+      }, duration);
+    } catch (error: unknown) {
+      const axiosError = error as {
+        response?: { data?: { message?: string } };
+      };
+      setSnackbar({
+        message:
+          axiosError.response?.data?.message || 'Erro ao realizar login.',
+        type: 'error',
+        duration: 10000,
+      });
+    }
+  };
 
   return (
-    <>
-      <div className="container-login">
-        <div className="login">
-          <div className="login-img">
-            <img
-              src="https://img.freepik.com/vetores-premium/colecao-de-ilustracao-de-comida-desenhada-de-mao_699403-8.jpg?w=1380"
-              alt="imagem login"
-            />
-          </div>
-          <div className="login-form">
-            <h2>LOGIN</h2>
-            <input
-              id="email"
-              type="text"
-              placeholder="E-mail do usuário"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              id="senha"
-              type="text"
-              placeholder="Senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-            <button className="login-btn" onClick={() => (navigate('/'))}>
-              Logar
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
+    <Container>
+      <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+      <Input
+        placeholder="Email"
+        errorMessage={errors.email}
+        value={values.email}
+        type="text"
+        onChange={handleChange("email")}
+      />
+      <Input
+        placeholder="Senha"
+        errorMessage={errors.senha}
+        value={values.senha}
+        type="password"
+        onChange={handleChange("senha")}
+      />
+      <Button
+        type="button"
+        className="bg-blue-500 text-white py-2 hover:bg-blue-600"
+        onClick={login}
+      >
+        Entrar
+      </Button>
+      <Snackbar
+        message={snackbar.message}
+        type={snackbar.type}
+        duration={snackbar.duration}
+        onClose={() =>
+          setSnackbar({ message: '', type: 'success', duration: 0 })
+        }
+      />
+    </Container>
   );
-};
-
-export default Login;
+}

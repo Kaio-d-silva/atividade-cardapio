@@ -51,5 +51,11 @@
     background-color: #504040;
     color: #fff;
     box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 10px;
+    transition: all 0.1s ease;
 }
 
+.login-btn:hover {
+    background-color: #362f2f;
+    width: 105px;
+
+}
