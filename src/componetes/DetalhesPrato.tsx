@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from "react";
-import "../estilos/DetalhesPrato.css"; // Importando o CSS específico para o componente
+import "../estilos/detalhes-prato.css"; // Importando o CSS específico para o componente
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../http/api";
 

@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from "react";
-import "../estilos/Home.css";
+import "../estilos/home.css";
 import terraDasAguas from "../assets/terra_das_aguas.jpg";
 import CardPrato from "./CardPrato";
 import CardNovoPrato from "./CardNovoPrato";
 import { AuthContext } from "../context/authContext";
 import api from "../http/api";
+import HomeGerente from "./HomeGerente";
 
 interface Prato {
   id : number
@@ -57,7 +58,8 @@ function Home() {
       </div>
       <h1>Bem vindo ao Restaurante Terra das Aguas SENAC - MS</h1>
       <div className="lista-pratos">
-        <CardNovoPrato />
+        <HomeGerente/>
+        {/* <CardNovoPrato />
         {pratos && 
           pratos
           .filter((item: Prato) => item.id !== 0) 
@@ -72,7 +74,7 @@ function Home() {
             imagem={item.imagem} 
             usuario={usuario}
           />
-        ))} 
+        ))}  */}
       </div>
     </div>
   );

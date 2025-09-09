@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import "../estilos/CardPrato.css";
+import "../estilos/card-prato.css";
 import { useNavigate } from "react-router-dom";
 import api from "../http/api";
 

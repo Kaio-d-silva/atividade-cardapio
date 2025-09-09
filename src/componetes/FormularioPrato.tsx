@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../estilos/FormularioPrato.css"; // Importando o CSS específico para o componente
+import "../estilos/formulario-prato.css"; // Importando o CSS específico para o componente
 import api from "../http/api";
 import Input from "./Input";
 import useForm from "../hooks/userForm";
