@@ -5,7 +5,7 @@ import CardPrato from "./CardPrato";
 import CardNovoPrato from "./CardNovoPrato";
 import { AuthContext } from "../context/authContext";
 import api from "../http/api";
-import HomeGerente from "./HomeGerente";
+import HomeGerente from "./HomeAdmin";
 
 interface Prato {
   id : number
@@ -57,12 +57,11 @@ function Home() {
         <img src={terraDasAguas} alt="" />
       </div>
       <h1>Bem vindo ao Restaurante Terra das Aguas SENAC - MS</h1>
+    
       <div className="lista-pratos">
-        <HomeGerente/>
-        {/* <CardNovoPrato />
-        {pratos && 
+        <CardNovoPrato />
+        {pratos && usuario !== "Gerente" && 
           pratos
-          .filter((item: Prato) => item.id !== 0) 
           .map((item: Prato) => (
 
           <CardPrato 
@@ -74,7 +73,16 @@ function Home() {
             imagem={item.imagem} 
             usuario={usuario}
           />
-        ))}  */}
+        ))}
+        {pratos && usuario === "Gerente" && (
+          <HomeGerente
+          nome=""
+          cozinha=""
+          descricao_detalhada=""
+          descricao_resumida=""
+          />
+        )}
+
       </div>
     </div>
   );
