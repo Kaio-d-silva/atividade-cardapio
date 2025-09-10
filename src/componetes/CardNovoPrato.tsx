@@ -1,7 +1,7 @@
 import React from "react";
 import adicionarPrato from "../assets/imagem_adicionar_prato.jpg";
 import { Link } from "react-router-dom";
-import "../estilos/card-novo-prato";
+import "../estilos/card-novo-prato.css";
 
 const CardNovoPrato = () => {
 
