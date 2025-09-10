@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import "../estilos/home.css";
-import terraDasAguas from "../assets/terra_das_aguas.jpg";
+import terraDasAguas from "../assets/terra_das_aguas_edit.jpg";
 import CardPrato from "./CardPrato";
 import CardNovoPrato from "./CardNovoPrato";
 import { AuthContext } from "../context/authContext";
 import api from "../http/api";
 import HomeGerente from "./HomeAdmin";
 
-interface Prato {
+export interface Prato {
   id : number
   nome : string
   cozinha : string
@@ -20,7 +20,7 @@ interface Prato {
 
 function Home() {
 
-  const [pratos, setPrato] = React.useState([{
+  const [pratos, setPrato] = React.useState<Prato[]>([{
     id: 0,
     nome: "",
     cozinha: "",
@@ -60,7 +60,7 @@ function Home() {
     
       <div className="lista-pratos">
         <CardNovoPrato />
-        {pratos && usuario !== "Gerente" && 
+        {pratos && usuario?.role !== "Gerente" && 
           pratos
           .map((item: Prato) => (
 
@@ -74,12 +74,10 @@ function Home() {
             usuario={usuario}
           />
         ))}
-        {pratos && usuario === "Gerente" && (
+        {pratos && usuario?.role === "Gerente" && (
           <HomeGerente
-          nome=""
-          cozinha=""
-          descricao_detalhada=""
-          descricao_resumida=""
+          pratos={pratos}
+          api={api}
           />
         )}
 
