@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import "../estilos/home.css";
 import terraDasAguas from "../assets/terra_das_aguas_edit.jpg";
-import CardPrato from "./CardPrato";
-import CardNovoPrato from "./CardNovoPrato";
 import { AuthContext } from "../context/authContext";
 import api from "../http/api";
 import HomeGerente from "./HomeAdmin";
+import { HomeCliente } from "./HomeCliente";
+import { BotaoCarrinho } from "./BotaoCarrinho";
 
 export interface Prato {
   id : number
@@ -49,7 +49,7 @@ function Home() {
     throw new Error("AuthContext não esta disponivel ")
   }
 
-  const { usuario, verificarLogin } = authContext
+  const { usuario } = authContext
 
   return (
     <div className="home">
@@ -57,23 +57,20 @@ function Home() {
         <img src={terraDasAguas} alt="" />
       </div>
       <h1>Bem vindo ao Restaurante Terra das Aguas SENAC - MS</h1>
-    
+      <div className="container-carrinho">
+      {pratos && usuario?.role !== "Gerente" &&
+          <BotaoCarrinho/>
+        }
+      </div>
       <div className="lista-pratos">
-        <CardNovoPrato />
-        {pratos && usuario?.role !== "Gerente" && 
-          pratos
-          .map((item: Prato) => (
+        
 
-          <CardPrato 
-            key={item.id}
-            id={item.id}
-            nome={item.nome} 
-            cozinha={item.cozinha} 
-            descricao_resumida={item.descricao_resumida} 
-            imagem={item.imagem} 
-            usuario={usuario}
-          />
-        ))}
+        {pratos && usuario?.role !== "Gerente" && 
+        <HomeCliente
+        pratos={pratos}
+        usuario={usuario}
+
+        />}
         {pratos && usuario?.role === "Gerente" && (
           <HomeGerente
           pratos={pratos}
