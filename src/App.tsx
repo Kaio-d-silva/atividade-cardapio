@@ -5,6 +5,7 @@ import DetalhesPrato from "./componetes/DetalhesPrato";
 import FormularioPrato from "./componetes/FormularioPrato";
 import Login from "./componetes/Login";
 import { AuthProvider } from "./context/authContext";
+import { Carrinho } from "./componetes/Carrinho"
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
         <Route path="/detalhes-prato/:id" element={<DetalhesPrato />} />
         <Route path="/cadastro-prato" element={<FormularioPrato />} />
         <Route path="/editar-prato/:id" element={<FormularioPrato isEditing= {true} />} />
+        <Route path="/carrinho" element={<Carrinho/>} />
+
       </Routes>
     </Router>
   );

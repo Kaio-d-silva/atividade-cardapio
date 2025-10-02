@@ -28,4 +28,25 @@
   flex-wrap: wrap;
   gap: 1.8rem;
   justify-content: center;
+  /* align-items: center;
+  flex-direction:  column; */
+}
+
+.container-carrinho{
+  display: flex;
+  justify-content: end;
+  /* background-color: aquamarine; */
+}
+
+.carrinho{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 70px;
+  border: none ;
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
 }

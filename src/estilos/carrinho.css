@@ -1,0 +1,18 @@
+.logo-carrinho{
+    width: 30px;
+    height: 30px;
+}
+
+.carrinho:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.carrinho{
+    position: fixed ;
+    margin-top: 10px;
+    margin-right: 10px;
+    top: 0;
+    right: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
