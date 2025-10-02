@@ -57,6 +57,7 @@ function DetalhesPrato() {
             <strong>Descrição da sua experiência Gastronômica:</strong> {prato.descricao_detalhada}
           </p>
           <button onClick={() => {navigate('/')}}>Voltar</button>
+          <button> Adicionar ao carrinho </button>
         </div>
       </div>
     </>
