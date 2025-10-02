@@ -14,6 +14,8 @@ interface CardPratoProps {
 }
 
 const CardPrato: FC<CardPratoProps> = (props) => {
+  const navigate = useNavigate()
+
   return (
     <>
       <div className="prato-card">
@@ -31,9 +33,11 @@ const CardPrato: FC<CardPratoProps> = (props) => {
         <h2 className="nome-prato">{props.nome}</h2>
         <p className="cozinha-prato">{props.cozinha}</p>
         <p className="descricao-curta-prato">{props.descricao_resumida}</p>
-        <a href="#" className="btn">
+        <button
+        onClick={() => navigate(`/detalhes-prato/${props.id}`)}
+        >
           Ver Detalhes
-        </a>
+        </button>
       </div>
     </>
   );
