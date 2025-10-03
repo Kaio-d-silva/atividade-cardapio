@@ -5,6 +5,11 @@
   min-height: 100vh;
 }
 
+.card-novo-prato{
+  display: flex;
+  justify-content: center;
+}
+
 /* Estilo do título */
 .home h1 {
   text-align: center;

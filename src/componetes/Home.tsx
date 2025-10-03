@@ -6,29 +6,30 @@ import api from "../http/api";
 import HomeGerente from "./HomeAdmin";
 import { HomeCliente } from "./HomeCliente";
 import { BotaoCarrinho } from "./BotaoCarrinho";
+import CardNovoPrato from "./CardNovoPrato";
 
 export interface Prato {
-  id : number
-  nome : string
-  cozinha : string
-  descricao_resumida : string
-  descricao_detalhada : string
-  imagem : string
-  valor : number
-} 
-
+  id: number;
+  nome: string;
+  cozinha: string;
+  descricao_resumida: string;
+  descricao_detalhada: string;
+  imagem: string;
+  valor: number;
+}
 
 function Home() {
-
-  const [pratos, setPrato] = React.useState<Prato[]>([{
-    id: 0,
-    nome: "",
-    cozinha: "",
-    descricao_resumida: "",
-    descricao_detalhada: "",
-    imagem: "",
-    valor: 0,
-  }]);
+  const [pratos, setPrato] = React.useState<Prato[]>([
+    {
+      id: 0,
+      nome: "",
+      cozinha: "",
+      descricao_resumida: "",
+      descricao_detalhada: "",
+      imagem: "",
+      valor: 0,
+    },
+  ]);
 
   useEffect(() => {
     const fetchPrato = async () => {
@@ -43,13 +44,13 @@ function Home() {
     fetchPrato();
   }, [pratos]);
 
-  const authContext = useContext(AuthContext)
+  const authContext = useContext(AuthContext);
 
-  if(!authContext){
-    throw new Error("AuthContext não esta disponivel ")
+  if (!authContext) {
+    throw new Error("AuthContext não esta disponivel ");
   }
 
-  const { usuario } = authContext
+  const { usuario } = authContext;
 
   return (
     <div className="home">
@@ -58,27 +59,20 @@ function Home() {
       </div>
       <h1>Bem vindo ao Restaurante Terra das Aguas SENAC - MS</h1>
       <div className="container-carrinho">
-      {pratos && usuario?.role !== "Gerente" &&
-          <BotaoCarrinho/>
-        }
+        {pratos && usuario?.role !== "Gerente" && <BotaoCarrinho />}
       </div>
       <div className="lista-pratos">
-        
-
-        {pratos && usuario?.role !== "Gerente" && 
-        <HomeCliente
-        pratos={pratos}
-        usuario={usuario}
-
-        />}
-        {pratos && usuario?.role === "Gerente" && (
-          <HomeGerente
-          pratos={pratos}
-          api={api}
-          />
+        {pratos && usuario?.role !== "Gerente" && (
+          <HomeCliente pratos={pratos} usuario={usuario} />
         )}
-
       </div>
+      <div className="card-novo-prato">
+        {usuario?.role === "Gerente" && <CardNovoPrato />}
+      </div>
+
+      {pratos && usuario?.role === "Gerente" && (
+        <HomeGerente pratos={pratos} api={api} />
+      )}
     </div>
   );
 }

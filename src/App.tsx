@@ -5,7 +5,7 @@ import DetalhesPrato from "./componetes/DetalhesPrato";
 import FormularioPrato from "./componetes/FormularioPrato";
 import Login from "./componetes/Login";
 import { AuthProvider } from "./context/authContext";
-import { Carrinho } from "./componetes/Carrinho"
+import Carrinho from "./componetes/Carrinho"
 
 function App() {
   return (

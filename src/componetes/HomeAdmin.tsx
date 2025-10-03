@@ -3,7 +3,7 @@ import "../estilos/home-admin.css";
 import { Prato } from "../componetes/Home";
 import ActionsPrato from "./ActionsPrato";
 import { AxiosInstance } from "axios";
-import CardNovoPrato from "./CardNovoPrato";
+
 
 interface PratoProps {
   pratos: Prato[];
@@ -13,7 +13,6 @@ interface PratoProps {
 const HomeGerente: FC<PratoProps> = (props) => {
   return (
     <>
-      <CardNovoPrato />
       <div className="tabela-container">
         <table>
           <thead className="content-table">

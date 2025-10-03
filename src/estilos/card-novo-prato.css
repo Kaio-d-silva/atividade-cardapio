@@ -1,7 +1,7 @@
 .link-card {
-    width: calc(50% - 1.2rem);
+    width: calc(35% - 1.2rem);
     max-width: 400px;
-    margin: 0;
+    margin-bottom: 10px;
     padding: 0;
     gap: 2;
     display: flex;
