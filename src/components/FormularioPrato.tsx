@@ -51,7 +51,7 @@ const FormularioPrato: React.FC<PratoFormProps> = ({ isEditing = false }) => {
             descricao_resumida,
             imagem,
             valor,
-          } = response.data[0];
+          } = response.data;
           updateValues({
             nome,
             cozinha,

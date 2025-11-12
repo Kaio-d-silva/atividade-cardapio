@@ -12,6 +12,8 @@ import DetalhesPrato from '../components/DetalhesPrato';
 import FormularioPrato from '../components/FormularioPrato';
 import { AuthProvider } from '../context/authContext';
 import { CartProvider } from '../context/cartContext';
+import PedidosManagement from '../views/PedidosManagement';
+import PratosManagement from '../views/PratosManagement';
 
 export interface RouteConfig {
   path: string;
@@ -21,16 +23,16 @@ export interface RouteConfig {
 
 const routes: RouteConfig[] = [
   {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: 'cardapio',
+    path: '/',
     element: (
       <CartProvider>
         <HomeCliente />
       </CartProvider>
     ),
+  },
+  {
+    path: '/login',
+    element: <Login />,
   },
   {
     path: '/detalhes/:id',
@@ -49,11 +51,11 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/',
+    path: '/admin',
     element: <ProtectedRoute />,
     children: [
       {
-        path: 'admin',
+        path: '',
         element: (
           <AuthProvider>
             <RestrictedLayout />
@@ -63,6 +65,14 @@ const routes: RouteConfig[] = [
           {
             path: '',
             element: <Navigate to="home" replace />,
+          },
+          {
+            path: 'pedidos',
+            element: <PedidosManagement />,
+          },
+          {
+            path: 'pratos',
+            element: <PratosManagement />,
           },
           {
             path: 'novo-prato',
@@ -94,7 +104,7 @@ const routes: RouteConfig[] = [
   },
   {
     path: '*',
-    element: <Navigate to="/cardapio" replace />,
+    element: <Navigate to="/" replace />,
   },
 ];
 

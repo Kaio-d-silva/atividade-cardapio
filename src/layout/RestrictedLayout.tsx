@@ -37,6 +37,8 @@ const RestrictedLayout: React.FC = () => {
     { path: '/admin/logout', label: 'Logout', icon: <FiLogOut /> },
     { path: '/admin/novo-prato', label: 'Novo Prato', icon: <FiDisc /> },
     { path: '/admin/usuarios', label: 'Usuários', icon: <FiUsers /> },
+    { path: '/admin/pratos', label: 'Pratos', icon: <FiUsers /> },
+    { path: '/admin/pedidos', label: 'Pedidos', icon: <FiUsers /> },
   ];
 
   return (

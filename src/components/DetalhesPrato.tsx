@@ -21,6 +21,7 @@ const DetalhesPrato: React.FC = () => {
 
   async function fetchPratoDetails(id: string): Promise<Prato> {
     const response = await api.get<Prato>(`/pratos/${id}`);
+    console.log(response.data);
     return response.data;
   }
 
